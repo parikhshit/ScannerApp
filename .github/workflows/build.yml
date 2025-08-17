@@ -1,12 +1,14 @@
-name: Build PyQt6 Scanner
+name: Build ScannerApp
 
 on:
   push:
     branches: [ main ]
   pull_request:
+    branches: [ main ]
 
 jobs:
   build:
+    name: Build on ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
@@ -14,7 +16,7 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -24,15 +26,16 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install -r requirements.txt
+          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+          if [ -f dev-requirements.txt ]; then pip install -r dev-requirements.txt; fi
           pip install pyinstaller
 
       - name: Build with PyInstaller
         run: |
-          pyinstaller --name "ParikhshitScanner" --onefile --windowed ScannerApp.py
+          pyinstaller --onefile --name parikhshit_scanner ScannerApp.py
 
       - name: Upload build artifact
         uses: actions/upload-artifact@v4
         with:
-          name: ParikhshitScanner-${{ runner.os }}
-          path: dist/*
+          name: parikhshit_scanner-${{ matrix.os }}
+          path: dist/
