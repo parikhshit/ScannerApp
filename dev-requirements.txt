@@ -1,0 +1,9 @@
+# Build tools
+pyinstaller
+dmgbuild       # macOS packaging (.dmg)
+appimage-builder  # Linux AppImage packaging
+
+# Optional helpers
+setuptools
+wheel
+twine
